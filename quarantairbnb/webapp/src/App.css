@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.full-page-layout {
+  height: 100%
+}
+
+.default-menu {
+  background: white;
+}
