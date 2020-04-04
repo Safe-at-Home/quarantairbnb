@@ -20,10 +20,57 @@ const Messages = () => (
   </Layout.Content>
 );
 
+export const ModeratorMessages = () => (
+  <Layout.Content>
+    <Row justify="center" type="flex" align="middle" className="full-page-layout">
+      <Col span={22}>
+        <Card>
+          <Layout>
+            <ModeratorMessagesSidebar/>
+            <Layout.Content style={{padding: 16}}>
+              <MyMessage messageText={"Cześć"}/>
+              <TheirMessage messageText={"A dzień dobry"}/>
+              <SendMessage/>
+            </Layout.Content>
+          </Layout>
+        </Card>
+      </Col>
+    </Row>
+  </Layout.Content>
+);
+
 const MessagesSidebar = () => (
   <Layout.Sider style={{background: "white"}}>
-    <MessageRecipents/>
+    <MessageRecipent name="Firstname Lastname"/>
   </Layout.Sider>
+);
+
+const ModeratorMessagesSidebar = () => (
+  <Layout.Sider style={{background: "white"}}>
+    <div style={{margin: 16}}>
+      <Card>
+        <Row justify="center" type="flex" align="middle">
+          Do you have any questions? You can ask one of our moderators here.
+        </Row>
+      </Card>
+    </div>
+  </Layout.Sider>
+);
+
+const MessageRecipent = (props) => (
+  <div style={{margin: 16}}>
+    <Card>
+      <Row justify="center" type="flex" align="middle">
+        Chatting with
+      </Row>
+      <Row justify="center" type="flex" align="middle">
+        <b>{props.name}</b>
+      </Row>
+    </Card>
+    <Row justify="center" type="flex" align="middle" style={{padding: 8}}>
+      <Button>See the request</Button>
+    </Row>
+  </div>
 );
 
 const MessageRecipents = () => (

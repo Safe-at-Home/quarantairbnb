@@ -5,7 +5,7 @@ import "./App.css"
 import ProgressStep from '@bit/nexxtway.react-rainbow.progress-step';
 import ProgressIndicator from '@bit/nexxtway.react-rainbow.progress-indicator';
 import Settings from "./settings";
-import Messages from "./messages";
+import Messages, {ModeratorMessages} from "./messages";
 import Offers from "./offers";
 import {Route, Link} from "react-router-dom";
 
@@ -20,6 +20,7 @@ function UserPanel() {
         <Route path="/userpanel/offers" component={Offers}/>
         <Route path="/userpanel/messages" component={Messages}/>
         <Route path="/userpanel/settings" component={Settings}/>
+        <Route path="/userpanel/moderatormessages" component={ModeratorMessages}/>
       </Layout>
     </Layout>
   )
@@ -27,7 +28,7 @@ function UserPanel() {
 
 const Sidebar = () => (
   <Layout.Sider style={{background: "white"}}>
-    <HostMenu/>
+    <HostMenu offerCreated={true} matched={true}/>
   </Layout.Sider>
 );
 
@@ -48,19 +49,22 @@ const GuestMenu = () => (
   </Menu>
 );
 
-const HostMenu = () => (
+const HostMenu = (props) => (
   <Menu mode="inline">
     <Menu.Item>
-      <OffersLink offerCreated={false}/>
+      <OffersLink offerCreated={props.offerCreated}/>
     </Menu.Item>
     <Menu.Item>
-      <Link to="/userpanel/messages">My messages</Link>
+      <Link to="/userpanel/messages" disabled={!props.matched}>Matched offer</Link>
+    </Menu.Item>
+    <Menu.Item>
+      <Link to="/userpanel/messages" disabled={!props.matched}>My messages</Link>
     </Menu.Item>
     <Menu.Item>
       <Link to="/userpanel/settings">Settings</Link>
     </Menu.Item>
     <Menu.Item>
-      <Link to="/userpanel/messages">My messages</Link>
+      <Link to="/userpanel/moderatormessages">Contact a moderator</Link>
     </Menu.Item>
   </Menu>
 );
