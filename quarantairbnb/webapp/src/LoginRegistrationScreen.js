@@ -1,15 +1,15 @@
 import React from "react";
+import { withRouter } from "react-router";
 import {Button, Card, Checkbox, Col, Collapse, Form, Input, Layout, Row, Tabs} from "antd";
-
-const {Header, Content, Footer} = Layout;
 const {Panel} = Collapse;
 const {TabPane} = Tabs;
+
 
 function LoginRegistrationScreen() {
   return (
     <Layout>
-      <Content style={{padding: '32px 64px'}}>
-        <Row justify="center">
+      <Layout.Content style={{height: "100vh"}}>
+        <Row justify="center" style={{height: "100vh"}} type="flex" align="middle">
           <Col span={8}>
             <Card>
               <Tabs defaultActiveKey="1">
@@ -23,8 +23,7 @@ function LoginRegistrationScreen() {
             </Card>
           </Col>
         </Row>
-        <Footer/>
-      </Content>
+      </Layout.Content>
     </Layout>
   )
 }
@@ -34,8 +33,8 @@ const LoginForm = () => (
     {...layout}
     name="basic"
     initialValues={{remember: true}}
-    onFinish={onFinish}
-    onFinishFailed={onFinishFailed}
+    // onFinish={onFinish}
+    // onFinishFailed={onFinishFailed}
   >
     <Form.Item
       label="Username"
@@ -70,8 +69,8 @@ const RegistrationForm = () => (
     {...layout}
     name="basic"
     initialValues={{remember: true}}
-    onFinish={onFinish}
-    onFinishFailed={onFinishFailed}
+    // onFinish={onFinish}
+    // onFinishFailed={onFinishFailed}
   >
     <Form.Item
       label="E-Mail Address"
@@ -171,4 +170,4 @@ const tailLayout = {
   wrapperCol: {offset: 8, span: 16},
 };
 
-export default LoginRegistrationScreen;
+export default withRouter(LoginRegistrationScreen);
