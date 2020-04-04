@@ -1,0 +1,1 @@
+web: ./build-and-run.sh
