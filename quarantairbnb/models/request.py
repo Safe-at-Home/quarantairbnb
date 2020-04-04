@@ -11,6 +11,7 @@ class Request(db.Model):
     offer_id = db.Column(db.Integer, db.ForeignKey('offers.id'), nullable=True)  # matched offer
 
     request_history = db.relationship("RequestHistory", backref="request", lazy="dynamic")
+    comments = db.relationship("Chat", backref="request", lazy="dynamic")
 
     def __repr__(self):
         return '<Request %r>' % self.id
