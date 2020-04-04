@@ -44,7 +44,7 @@ source .env
 Running:
 
 ```
-python manage.py runserver
+flask run
 ```
 
 
@@ -57,7 +57,7 @@ everything to be setup in the DB.
 When you want to update your model, adding a new migration:
 
 ```
-python manage.py db migrate
+flask db migrate
 ```
 
 ### Applying changes to the DB

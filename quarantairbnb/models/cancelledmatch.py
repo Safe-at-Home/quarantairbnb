@@ -1,8 +1,8 @@
 from . import db
 
 
-class Match(db.Model):
-    __tablename__ = "matches"
+class CancelledMatch(db.Model):
+    __tablename__ = "cancelled_matches"
     # Contains cancelled matches
     request_id = db.Column(db.Integer, db.ForeignKey('requests.id'), primary_key=True)
     offer_id = db.Column(db.Integer, db.ForeignKey('offers.id'), primary_key=True)

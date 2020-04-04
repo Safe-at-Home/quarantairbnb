@@ -44,11 +44,13 @@ def add_or_update(entity, data: Dict[str, any]):
     entity_id = data["id"]
     existing = entity.query.get(entity_id)
     if not existing:
-        db.session.add(entity(**data))
+        existing = entity(**data)
+        db.session.add(existing)
     else:
         for k, v in data.items():
             if hasattr(existing, k):
                 setattr(existing, k, v)
+    return existing
 
 
 @seed_cli.command('create')
@@ -65,19 +67,27 @@ def seed_data():
         "id": 3,
         "name": "host"
     })
+    new_user = add_or_update(User, {
+        "id": 1,
+        "username": "cristi",
+        "email": "admin@gmail.com",
+        "password": "",
+        "role_id": 1
+    })
+    new_user.set_password("1234")
     states = [
-        {"id": 1, "name": "initial", "next_state": 2, "cancel": None, "is_deletable": True},
-        {"id": 2, "name": "in_approval", "next_state": 3, "cancel": 6},
-        {"id": 3, "name": "approved", "next_state": 4, "cancel": 6},
-        {"id": 4, "name": "matched", "next_state": 5, "cancel": 3},
-        {"id": 5, "name": "done", "next_state": None, "cancel": None},
-        {"id": 6, "name": "denied", "next_state": None, "cancel": None}
+        {"id": 1, "name": "initial", "next_state_id": 2, "cancel_id": None, "is_deletable": True},
+        {"id": 2, "name": "in_approval", "next_state_id": 3, "cancel_id": 6},
+        {"id": 3, "name": "approved", "next_state_id": 4, "cancel_id": 6},
+        {"id": 4, "name": "matched", "next_state_id": 5, "cancel_id": 3},
+        {"id": 5, "name": "done", "next_state_id": None, "cancel_id": None},
+        {"id": 6, "name": "denied", "next_state_id": None, "cancel_id": None}
     ]
     # adds
     for s in states:
         copy_of_s = copy.deepcopy(s)
-        copy_of_s['next_state'] = None
-        copy_of_s['cancel'] = None
+        copy_of_s['next_state_id'] = None
+        copy_of_s['cancel_id'] = None
         add_or_update(State, copy_of_s)
     # updates
     for s in states:

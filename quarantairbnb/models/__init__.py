@@ -13,6 +13,6 @@ from quarantairbnb.models.offer import *
 from quarantairbnb.models.state import *
 
 from quarantairbnb.models.chat import *
-from quarantairbnb.models.match import *
+from quarantairbnb.models.cancelledmatch import *
 from quarantairbnb.models.offer_history import *
 from quarantairbnb.models.request_history import *
