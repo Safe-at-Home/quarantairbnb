@@ -1,2 +1,11 @@
 Flask
 gunicorn
+alembic
+Flask-Migrate
+Flask-SQLAlchemy
+psycopg2
+flask-restx
+Flask-Script
+Flask-Login
+python-dotenv
+werkzeug

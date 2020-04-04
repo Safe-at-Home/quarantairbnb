@@ -1,21 +1,20 @@
 import os
-from flask import Flask, send_from_directory
-from flask.json import jsonify
 
-app = Flask(__name__, static_folder='webapp/build')
+from flask import Flask
+from flask_migrate import Migrate
 
-# Serve React App
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
+from .models import db
 
-@app.route("/api/hello")
-def api_hello():
-    return jsonify({"hello": "world"})
 
-if __name__ == '__main__':
-    app.run(use_reloader=True, port=5000, threaded=True)
+def create_app():
+    flask_app = Flask(__name__, static_folder='webapp/build')
+    flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    flask_app.config.from_object(os.environ['APP_SETTINGS'])
+
+    db.init_app(flask_app)
+    Migrate(flask_app, db)
+
+    return flask_app
+
+
+app = create_app()
