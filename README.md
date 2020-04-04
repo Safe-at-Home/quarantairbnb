@@ -6,8 +6,28 @@ To run the app production-style:
 gunicorn wsgi:app
 ```
 
+## Login endpoint
+
+```
+http://localhost:5000/api/auth/login
+```
+
+With creds:
+
+```json
+{
+	"email": "admin@op.pl",
+	"password": "1234"
+}
+```
 
 ## Backend Development
+
+Setting the APP_SETTINGS variable in Heroku:
+
+```
+heroku config:set APP_SETTINGS="quarantairbnb.config.ProductionConfig"
+```
 
 Make sure you get postgres running locally, for Docker use:
 
@@ -24,7 +44,7 @@ source .env
 Running:
 
 ```
-python manage.py runserver
+flask run
 ```
 
 
@@ -37,7 +57,7 @@ everything to be setup in the DB.
 When you want to update your model, adding a new migration:
 
 ```
-python manage.py db migrate
+flask db migrate
 ```
 
 ### Applying changes to the DB
