@@ -1,4 +1,6 @@
+import copy
 import os
+from typing import Dict
 
 import click
 from flask import Flask
@@ -9,7 +11,7 @@ from flask.cli import AppGroup
 
 from .api import api_builder
 from .auth import jwt_handler
-from .models import db, ma, Role, User
+from .models import db, ma, Role, User, State
 
 
 def configure_api(api_instance: Api):
@@ -38,20 +40,48 @@ app = create_app()
 seed_cli = AppGroup('seed')
 
 
+def add_or_update(entity, data: Dict[str, any]):
+    entity_id = data["id"]
+    existing = entity.query.get(entity_id)
+    if not existing:
+        db.session.add(entity(**data))
+    else:
+        for k, v in data.items():
+            if hasattr(existing, k):
+                setattr(existing, k, v)
+
+
 @seed_cli.command('create')
 def seed_data():
-    db.session.add(Role(
-        id=1,
-        name='admin'
-    ))
-    db.session.add(Role(
-        id=2,
-        name='guest'
-    ))
-    db.session.add(Role(
-        id=3,
-        name='host'
-    ))
+    add_or_update(Role, {
+        "id": 1,
+        "name": "admin"
+    })
+    add_or_update(Role, {
+        "id": 2,
+        "name": "guest"
+    })
+    add_or_update(Role, {
+        "id": 3,
+        "name": "host"
+    })
+    states = [
+        {"id": 1, "name": "initial", "next_state": 2, "cancel": None, "is_deletable": True},
+        {"id": 2, "name": "in_approval", "next_state": 3, "cancel": 6},
+        {"id": 3, "name": "approved", "next_state": 4, "cancel": 6},
+        {"id": 4, "name": "matched", "next_state": 5, "cancel": 3},
+        {"id": 5, "name": "done", "next_state": None, "cancel": None},
+        {"id": 6, "name": "denied", "next_state": None, "cancel": None}
+    ]
+    # adds
+    for s in states:
+        copy_of_s = copy.deepcopy(s)
+        copy_of_s['next_state'] = None
+        copy_of_s['cancel'] = None
+        add_or_update(State, copy_of_s)
+    # updates
+    for s in states:
+        add_or_update(State, s)
     db.session.commit()
 
 
