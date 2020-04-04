@@ -23,6 +23,12 @@ With creds:
 
 ## Backend Development
 
+Setting the APP_SETTINGS variable in Heroku:
+
+```
+heroku config:set APP_SETTINGS="quarantairbnb.config.ProductionConfig"
+```
+
 Make sure you get postgres running locally, for Docker use:
 
 ```bash
