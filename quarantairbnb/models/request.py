@@ -10,6 +10,11 @@ class Request(db.Model):
     state_id = db.Column(db.Integer, db.ForeignKey('states.id'), nullable=False)
     offer_id = db.Column(db.Integer, db.ForeignKey('offers.id'), nullable=True)  # matched offer
 
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+
+    description = db.Column(db.String(800))
+
     request_history = db.relationship("RequestHistory", backref="request", lazy="dynamic")
     comments = db.relationship("Chat", backref="request", lazy="dynamic")
 

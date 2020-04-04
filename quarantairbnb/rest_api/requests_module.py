@@ -9,7 +9,7 @@ from quarantairbnb.api import api_builder
 from quarantairbnb.models import Request, db, State
 from quarantairbnb.rest_api import get_request_data
 from quarantairbnb.rest_api.utils import log_request_history
-from quarantairbnb.schemas import request_schema
+from quarantairbnb.schemas import request_schema, request_history_schema
 
 requests_ns = api_builder.namespace("requests", description="Requests endpoint")
 
@@ -57,6 +57,20 @@ class RequestToPost(Resource):
         return request_schema.dump(new_request)
 
 
+@requests_ns.route("/history/<int:request_id>")
+class RequestHistoryToGet(Resource):
+
+    @jwt_required()
+    def get(self, request_id: int):
+        request_to_return = Request.query.get(request_id)
+
+        if request_to_return:
+            request_history = request_to_return.request_history
+            return request_history_schema.dump(request_history)
+        else:
+            return {"error": "No request with given id"}, 400
+
+
 @requests_ns.route("/<string:operation>/<int:request_id>")
 class RequestAction(Resource):
 
@@ -77,12 +91,13 @@ class RequestAction(Resource):
                                      .format(request_id))
 
                 # Update the state of the request
+                initial_state_name = request_entity.state.name
                 request_entity.state_id = request_entity.state.cancel_id
                 db.session.add(request_entity)
                 db.session.commit()
 
-                log_request_history(request_entity.id, 'The request is canceled by the user with id {}'
-                                    .format(current_identity.id))
+                log_request_history(request_entity.id, 'The request state changed from {} to {}'
+                                    .format(initial_state_name, request_entity.state.name))
                 return request_schema.dump(request_entity)
 
             elif operation == "accept":
@@ -91,12 +106,13 @@ class RequestAction(Resource):
                                      .format(request_id))
 
                 # Update the state of the request
+                initial_state_name = request_entity.state.name
                 request_entity.state_id = request_entity.state.next_state_id
                 db.session.add(request_entity)
                 db.session.commit()
 
-                log_request_history(request_entity.id, 'The request is accepted by the user with id {}'
-                                    .format(current_identity.id))
+                log_request_history(request_entity.id, 'The request state changed from {} to {}'
+                                    .format(initial_state_name, request_entity.state.name))
                 return request_schema.dump(request_entity)
 
             raise ValueError("No valid operation")
