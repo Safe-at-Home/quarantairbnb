@@ -1,4 +1,4 @@
-from . import db
+from . import db, ma
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -22,7 +22,6 @@ class User(UserMixin, db.Model):
                          nullable=False)
 
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    role = db.relationship('Role')
 
     def set_password(self, password):
         """Create hashed password."""
