@@ -1,18 +1,25 @@
 import React from "react";
-import {Button, Card, Checkbox, Col, Collapse, Form, Input, Layout, Row} from "antd";
+import {Button, Card, Checkbox, Col, Collapse, Form, Input, Layout, Row, Tabs} from "antd";
 
 const {Header, Content, Footer} = Layout;
 const {Panel} = Collapse;
+const {TabPane} = Tabs;
 
 function LoginRegistrationScreen() {
   return (
     <Layout>
-      <Header style={{height: 64}}/>
       <Content style={{padding: '32px 64px'}}>
         <Row justify="center">
           <Col span={8}>
             <Card>
-              <RegistrationForm/>
+              <Tabs defaultActiveKey="1">
+                <TabPane tab="Log in" key="1">
+                  <LoginForm/>
+                </TabPane>
+                <TabPane tab="Register" key="2">
+                  <RegistrationForm/>
+                </TabPane>
+              </Tabs>
             </Card>
           </Col>
         </Row>
