@@ -9,3 +9,9 @@ Flask-Script
 Flask-Login
 python-dotenv
 werkzeug
+Flask-JWT
+Flask-CORS
+Flask-Marshmallow
+marshmallow-sqlalchemy
+marshmallow
+cryptography

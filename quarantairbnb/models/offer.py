@@ -6,7 +6,6 @@ class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user = db.relationship("User")
 
     state_id = db.Column(db.Integer, db.ForeignKey('states.id'), nullable=False)
     request_id = db.Column(db.Integer, db.ForeignKey('requests.id'), nullable=True)  # matched request
