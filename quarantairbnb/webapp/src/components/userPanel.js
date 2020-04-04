@@ -1,38 +1,17 @@
 import React from 'react';
-import {withRouter} from "react-router";
 import {Layout, Menu, Row} from "antd";
-import "./App.css"
+import "../App.css"
 import ProgressStep from '@bit/nexxtway.react-rainbow.progress-step';
 import ProgressIndicator from '@bit/nexxtway.react-rainbow.progress-indicator';
-import Settings from "./settings";
-import Messages, {ModeratorMessages} from "./messages";
-import Offers from "./offers";
-import {Route, Link} from "react-router-dom";
+import {Link} from "react-router-dom";
 
-function UserPanel() {
-  return (
-    <Layout className="full-page-layout">
-      <Sidebar/>
-      <Layout>
-        <ProgressBar
-          stepNames={['Request help', 'Wait for the moderator\'s approval', 'Wait for a match', 'Chat with your match', 'All done!']}
-          currentStepIndex={1}/>
-        <Route path="/userpanel/offers" component={Offers}/>
-        <Route path="/userpanel/messages" component={Messages}/>
-        <Route path="/userpanel/settings" component={Settings}/>
-        <Route path="/userpanel/moderatormessages" component={ModeratorMessages}/>
-      </Layout>
-    </Layout>
-  )
-}
-
-const Sidebar = () => (
+export const Sidebar = (props) => (
   <Layout.Sider style={{background: "white"}}>
-    <HostMenu offerCreated={true} matched={true}/>
+    {props.children}
   </Layout.Sider>
 );
 
-const GuestMenu = () => (
+export const GuestMenu = () => (
   <Menu mode="inline">
     <Menu.Item>
       My request
@@ -49,7 +28,7 @@ const GuestMenu = () => (
   </Menu>
 );
 
-const HostMenu = (props) => (
+export const HostMenu = (props) => (
   <Menu mode="inline">
     <Menu.Item>
       <OffersLink offerCreated={props.offerCreated}/>
@@ -69,7 +48,7 @@ const HostMenu = (props) => (
   </Menu>
 );
 
-const ProgressBar = (props) => (
+export const ProgressBar = (props) => (
   <Layout.Header style={{background: "whitesmoke"}}>
     <Row justify="center" type="flex" align="middle">
         <ProgressIndicator currentStepName={props.stepNames[props.currentStepIndex]}>
@@ -98,5 +77,3 @@ const OffersLink = (props) => {
     </Menu.Item>
   );
 };
-
-export default withRouter(UserPanel);
