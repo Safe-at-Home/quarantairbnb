@@ -6,8 +6,9 @@ from flask_restx import Resource
 from flask import request
 
 from quarantairbnb.api import api_builder
-from quarantairbnb.models import Request, db, State, Role
+from quarantairbnb.models import Request, db, State
 from quarantairbnb.rest_api import get_request_data
+from quarantairbnb.rest_api.utils import log_request_history
 from quarantairbnb.schemas import request_schema
 
 requests_ns = api_builder.namespace("requests", description="Requests endpoint")
@@ -44,12 +45,15 @@ class RequestToPost(Resource):
 
     @staticmethod
     def _create_request(request_data):
+        state_id = State.query.filter_by(name="initial").one().id
+        request_data['state_id'] = state_id
         new_request = Request(**request_schema.load(request_data))
-        new_request.state_id = State.query.filter_by(name="initial").one().id
         new_request.user_id = current_identity.id
 
         db.session.add(new_request)
         db.session.commit()
+
+        log_request_history(new_request.id, 'Created the request')
         return request_schema.dump(new_request)
 
 
@@ -77,6 +81,8 @@ class RequestAction(Resource):
                 db.session.add(request_entity)
                 db.session.commit()
 
+                log_request_history(request_entity.id, 'The request is canceled by the user with id {}'
+                                    .format(current_identity.id))
                 return request_schema.dump(request_entity)
 
             elif operation == "delete":
@@ -88,6 +94,8 @@ class RequestAction(Resource):
                 db.session.delete(request_entity)
                 db.session.commit()
 
+                log_request_history(request_entity.id, 'The request is deleted by the user with id {}'
+                                    .format(current_identity.id))
                 return request_schema.dump(request_entity)
 
             elif operation == "accept":
@@ -100,6 +108,8 @@ class RequestAction(Resource):
                 db.session.add(request_entity)
                 db.session.commit()
 
+                log_request_history(request_entity.id, 'The request is accepted by the user with id {}'
+                                    .format(current_identity.id))
                 return request_schema.dump(request_entity)
 
             raise ValueError("No valid operation")

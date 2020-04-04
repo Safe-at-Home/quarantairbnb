@@ -8,6 +8,7 @@ from flask import request
 from quarantairbnb.api import api_builder
 from quarantairbnb.models import Offer, db, State
 from quarantairbnb.rest_api import get_request_data
+from quarantairbnb.rest_api.utils import log_offer_history
 from quarantairbnb.schemas import offer_schema, offers_schema
 
 offers_ns = api_builder.namespace("offers", description="Offers endpoint")
@@ -43,12 +44,15 @@ class OfferToPost(Resource):
 
     @staticmethod
     def _create_offer(offer_data):
+        state_id = State.query.filter_by(name="initial").one().id
+        offer_data['state_id'] = state_id
         new_offer = Offer(**offer_schema.load(offer_data))
-        new_offer.state_id = State.query.filter_by(name="initial").one().id
         new_offer.user_id = current_identity.id
 
         db.session.add(new_offer)
         db.session.commit()
+
+        log_offer_history(new_offer.id, 'Created the offer')
         return offer_schema.dump(new_offer)
 
 
@@ -76,6 +80,8 @@ class OfferAction(Resource):
                 db.session.add(offer_entity)
                 db.session.commit()
 
+                log_offer_history(offer_entity.id, 'The offer is canceled by the user with id {}'
+                                  .format(current_identity.id))
                 return offer_schema.dump(offer_entity)
 
             elif operation == "delete":
@@ -87,6 +93,8 @@ class OfferAction(Resource):
                 db.session.delete(offer_entity)
                 db.session.commit()
 
+                log_offer_history(offer_entity.id, 'The offer is deleted by the user with id {}'
+                                  .format(current_identity.id))
                 return offer_schema.dump(offer_entity)
 
             elif operation == "accept":
@@ -99,6 +107,8 @@ class OfferAction(Resource):
                 db.session.add(offer_entity)
                 db.session.commit()
 
+                log_offer_history(offer_entity.id, 'The offer is accepted by the user with id {}'
+                                  .format(current_identity.id))
                 return offer_schema.dump(offer_entity)
 
             raise ValueError("No valid operation")
