@@ -4,6 +4,7 @@ import * as cfg from "./config";
 import apiMiddlewareCreator from "./middleware/apiMiddleware";
 import rootReducers from "./reducers";
 
+console.log("store", cfg)
 const middleware = [thunkMiddleware, apiMiddlewareCreator(cfg)];
 const initialState = {};
 

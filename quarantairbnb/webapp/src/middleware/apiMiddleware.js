@@ -1,5 +1,6 @@
 import * as m from "../actions/modifiers";
 import * as h from "../actions/helpers";
+import * as at from "../actions/types"
 import ApiService from "../services/ApiService";
 
 let service;
@@ -50,10 +51,24 @@ const performApiCall = (
   successType,
   errorType
 ) => {
+  console.log("Action type: ", actionType)
   const wrapApiCall = createApiCallWrapper(dispatch, successType, errorType);
   // just a stupid example, doesnt work obviously
-  if (h.isModifiedBy(m.GET_ALL, actionType)) {
-      return wrapApiCall(() => service.getWhatever())
+  if (actionType === h.createActionName(at.USER, m.GET_ALL)) {
+    return wrapApiCall(() => service.getCurrentUser())
+  }
+  else if (actionType === h.createActionName(at.USER, m.POST_LOGIN)) {
+    console.log("posting logging...", params)
+    return wrapApiCall(() => service.login(params))
+  }
+  else if (actionType === h.createActionName(at.HOST, m.POST_REGISTER)) {
+    return wrapApiCall(() => service.registerHost(params))
+  }
+  else if (actionType === h.createActionName(at.GUEST, m.POST_REGISTER)) {
+    return wrapApiCall(() => service.registerGuest(params))
+  }
+  else {
+    console.log("Unknown action type:", actionType)
   }
 };
 
@@ -62,8 +77,13 @@ export default (cfg) => (store) => (dispatch) => (action) => {
   if (apiCall === undefined) {
     return dispatch(action);
   }
+
+  const { auth } = store.getState();
   if (!service) {
-    service = new ApiService(cfg);
+    console.log("middleware", auth, cfg)
+    service = new ApiService(auth, cfg);
+  } else {
+    service.auth = auth;
   }
 
   const [requestType, successType, errorType] = apiCall;
@@ -71,5 +91,5 @@ export default (cfg) => (store) => (dispatch) => (action) => {
     type: requestType,
   });
 
-  return performApiCall(dispatch, service, action.type, successType, errorType);
+  return performApiCall(dispatch, service, action.payload, action.type, successType, errorType);
 };
