@@ -1,36 +1,23 @@
 import React from "react";
 import "./App.css";
-import { Layout, Menu, Row,Col } from "antd";
-import StartingScreen from "./StartingScreen";
-import Header from "react-fullpage/dist/Header";
+import LandingPage from "./components/LandingPage";
+import {Route, withRouter} from "react-router";
+import LoginRegistrationScreen from "./components/LoginRegistrationScreen";
+import GuestPanel from "./components/GuestPanel";
+import HostPanel from "./components/HostPanel";
 
+// we should add routing here based on token/router I guess
 function App() {
   return (
-    <Layout className="layout">
-      <Header>
-        <Layout.Header>
-          <Row>
-            <Col span={12}>
-              <h1 style={{color: "#eee"}}>Quarantairbnb</h1>
-            </Col>
-            <Col span={12}>
-              <Menu
-                theme="dark"
-                mode="horizontal"
-                style={{ lineHeight: "64px", textAlign: "right" }}
-              >
-                <Menu.Item key="1">Log in</Menu.Item>
-                <Menu.Item key="2">Sign up</Menu.Item>
-              </Menu>
-            </Col>
-          </Row>
-        </Layout.Header>
-      </Header>
-      <Layout.Content>
-        <StartingScreen />
-      </Layout.Content>
-    </Layout>
+    <>
+      <Route exact path="/" component={LandingPage}/>
+      <Route path="/login" render={(props) => <LoginRegistrationScreen {...props} isLogin={true}/>}/>
+      <Route path="/registerHost" render={(props) => <LoginRegistrationScreen {...props} isLogin={false} isHost={true}/>}/>
+      <Route path="/registerGuest" render={(props) => <LoginRegistrationScreen {...props} isLogin={false} isHost={false}/>}/>
+      <Route path="/guest" component={GuestPanel}/>
+      <Route path="/host" component={HostPanel}/> 
+    </>
   );
 }
 
-export default App;
+export default withRouter(App);
