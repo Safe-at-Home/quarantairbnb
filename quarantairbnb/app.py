@@ -3,6 +3,7 @@ import os
 from typing import Dict
 
 import click
+from celery import Celery
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -12,10 +13,16 @@ from flask.cli import AppGroup
 from .api import api_builder
 from .auth import jwt_handler
 from .models import db, ma, Role, User, State
+from .tasks import celery, add
 
 
 def configure_api(api_instance: Api):
     api_instance.prefix = '/api/v1'
+
+
+def configure_celery(celery: Celery, flask_app: Flask):
+    celery.main = flask_app.name
+    celery.broker = flask_app.config['CELERY_BROKER_URL']
 
 
 def create_app():
@@ -31,6 +38,8 @@ def create_app():
     api_builder.init_app(flask_app)
     jwt_handler.init_app(flask_app)
     Migrate(flask_app, db)
+    configure_celery(celery, flask_app)
+    celery.conf.update(flask_app.config)
 
     return flask_app
 
