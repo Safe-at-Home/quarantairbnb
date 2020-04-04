@@ -5,18 +5,18 @@ const {Panel} = Collapse;
 const {TabPane} = Tabs;
 
 
-function LoginRegistrationScreen() {
+function LoginRegistrationScreen(props) {
   return (
     <Layout>
       <Layout.Content style={{height: "100vh"}}>
         <Row justify="center" style={{height: "100vh"}} type="flex" align="middle">
           <Col span={8}>
             <Card>
-              <Tabs defaultActiveKey="1">
-                <TabPane tab="Log in" key="1">
+              <Tabs defaultActiveKey={props.tabIndex}>
+                <TabPane tab="Log in" key="login">
                   <LoginForm/>
                 </TabPane>
-                <TabPane tab="Register" key="2">
+                <TabPane tab="Register" key="register">
                   <RegistrationForm/>
                 </TabPane>
               </Tabs>
