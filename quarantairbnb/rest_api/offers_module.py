@@ -9,7 +9,7 @@ from quarantairbnb.api import api_builder
 from quarantairbnb.models import Offer, db, State
 from quarantairbnb.rest_api import get_request_data
 from quarantairbnb.rest_api.utils import log_offer_history
-from quarantairbnb.schemas import offer_schema, offers_schema
+from quarantairbnb.schemas import offer_schema, offers_schema, offer_history_schema
 
 offers_ns = api_builder.namespace("offers", description="Offers endpoint")
 
@@ -56,6 +56,20 @@ class OfferToPost(Resource):
         return offer_schema.dump(new_offer)
 
 
+@offers_ns.route("/history/<int:offer_id>")
+class OfferHistoryToGet(Resource):
+
+    @jwt_required()
+    def get(self, offer_id: int):
+        offer_to_return = Offer.query.get(offer_id)
+
+        if offer_to_return:
+            offer_history = offer_to_return.request_history
+            return offer_history_schema.dump(offer_history)
+        else:
+            return {"error": "No request with given id"}, 400
+
+
 @offers_ns.route("/<string:operation>/<int:offer_id>")
 class OfferAction(Resource):
 
@@ -76,12 +90,13 @@ class OfferAction(Resource):
                                      .format(offer_id))
 
                 # Update the state of the offer
+                initial_state_name = offer_entity.state.name
                 offer_entity.state_id = offer_entity.state.cancel_id
                 db.session.add(offer_entity)
                 db.session.commit()
 
-                log_offer_history(offer_entity.id, 'The offer is canceled by the user with id {}'
-                                  .format(current_identity.id))
+                log_offer_history(offer_entity.id, 'The offer changed state from {} to {}'
+                                  .format(initial_state_name, offer_entity.state.name))
                 return offer_schema.dump(offer_entity)
 
             elif operation == "accept":
@@ -90,12 +105,13 @@ class OfferAction(Resource):
                                      .format(offer_id))
 
                 # Update the state of the offer
+                initial_state_name = offer_entity.state.name
                 offer_entity.state_id = offer_entity.state.next_state_id
                 db.session.add(offer_entity)
                 db.session.commit()
 
-                log_offer_history(offer_entity.id, 'The offer is accepted by the user with id {}'
-                                  .format(current_identity.id))
+                log_offer_history(offer_entity.id, 'The offer changed state from {} to {}'
+                                  .format(initial_state_name, offer_entity.state.name))
                 return offer_schema.dump(offer_entity)
 
             raise ValueError("No valid operation")
@@ -114,7 +130,6 @@ class OfferAction(Resource):
         }
 
         return state_name in role_name_to_cancellable_states[role_name]
-
 
     @staticmethod
     def _accept_possible_for_role(state_name: str, role_name: str) -> bool:
