@@ -1,1 +1,1 @@
-web: ./build-and-run.sh
+web: gunicorn application:app

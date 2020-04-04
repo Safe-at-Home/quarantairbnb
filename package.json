@@ -1,0 +1,7 @@
+{
+  "name": "quarantairbnb",
+  "version": "0.1.0",
+  "scripts": {
+    "postinstall": "npm install --prefix ./quarantairbnb/webapp && npm run build --prefix ./quarantairbnb/webapp"
+  }
+}
