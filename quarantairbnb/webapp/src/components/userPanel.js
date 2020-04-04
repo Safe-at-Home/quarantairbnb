@@ -11,19 +11,22 @@ export const Sidebar = (props) => (
   </Layout.Sider>
 );
 
-export const GuestMenu = () => (
+export const GuestMenu = (props) => (
   <Menu mode="inline">
     <Menu.Item>
-      My request
+      <OffersLink offerCreated={props.offerCreated}/>
     </Menu.Item>
     <Menu.Item>
-      My messages
+      <Link to="/guest/messages" disabled={!props.matched}>Matched offer</Link>
     </Menu.Item>
     <Menu.Item>
-      Settings
+      <Link to="/guest/messages" disabled={!props.matched}>My messages</Link>
     </Menu.Item>
     <Menu.Item>
-      Contact a moderator
+      <Link to="/guest/settings">Settings</Link>
+    </Menu.Item>
+    <Menu.Item>
+      <Link to="/guest/moderatormessages">Contact a moderator</Link>
     </Menu.Item>
   </Menu>
 );
@@ -34,16 +37,16 @@ export const HostMenu = (props) => (
       <OffersLink offerCreated={props.offerCreated}/>
     </Menu.Item>
     <Menu.Item>
-      <Link to="/userpanel/messages" disabled={!props.matched}>Matched offer</Link>
+      <Link to="/host/messages" disabled={!props.matched}>Matched offer</Link>
     </Menu.Item>
     <Menu.Item>
-      <Link to="/userpanel/messages" disabled={!props.matched}>My messages</Link>
+      <Link to="/host/messages" disabled={!props.matched}>My messages</Link>
     </Menu.Item>
     <Menu.Item>
-      <Link to="/userpanel/settings">Settings</Link>
+      <Link to="/host/settings">Settings</Link>
     </Menu.Item>
     <Menu.Item>
-      <Link to="/userpanel/moderatormessages">Contact a moderator</Link>
+      <Link to="/host/moderatormessages">Contact a moderator</Link>
     </Menu.Item>
   </Menu>
 );
