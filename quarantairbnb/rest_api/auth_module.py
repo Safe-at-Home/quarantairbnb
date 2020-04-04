@@ -68,4 +68,6 @@ class UserResource(Resource):
 
     @jwt_required()
     def get(self):
-        return user_schema.dump(current_identity)
+        data = user_schema.dump(current_identity)
+        data['role'] = current_identity.role.name
+        return data
