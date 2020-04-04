@@ -1,6 +1,6 @@
 from marshmallow import fields
 
-from quarantairbnb.models import ma, Request, Offer, Chat
+from quarantairbnb.models import ma, Request, Offer, Chat, State
 
 
 class UserSchema(ma.Schema):
@@ -9,16 +9,29 @@ class UserSchema(ma.Schema):
     password = fields.Str(required=True)
 
 
+class StateSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = State
+        include_fk = True
+
+
+state_schema = StateSchema()
+
+
 class RequestSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Request
         include_fk = True
+
+    state = fields.Nested(state_schema)
 
 
 class OfferSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Offer
         include_fk = True
+
+    state = fields.Nested(state_schema)
 
 
 class ChatSchema(ma.SQLAlchemyAutoSchema):
@@ -38,3 +51,4 @@ offers_schema = OfferSchema(many=True)
 
 chat_schema = ChatSchema()
 chats_schema = ChatSchema(many=True)
+
