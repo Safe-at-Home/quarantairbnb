@@ -20,7 +20,7 @@ function LandingPage() {
                 mode="horizontal"
                 style={{ lineHeight: "64px", textAlign: "right" }}
               >
-                <Menu.Item key="1"><Link to={'/register'}>Log in</Link></Menu.Item>
+                <Menu.Item key="1"><Link to={'/login'}>Log in</Link></Menu.Item>
                 <Menu.Item key="2"><Link to={'/register'}>Sign up</Link></Menu.Item>
               </Menu>
             </Col>
