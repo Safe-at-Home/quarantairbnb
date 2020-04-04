@@ -6,6 +6,20 @@ To run the app production-style:
 gunicorn wsgi:app
 ```
 
+## Login endpoint
+
+```
+http://localhost:5000/api/auth/login
+```
+
+With creds:
+
+```json
+{
+	"email": "admin@op.pl",
+	"password": "1234"
+}
+```
 
 ## Backend Development
 

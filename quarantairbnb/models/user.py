@@ -21,7 +21,10 @@ class User(UserMixin, db.Model):
                          unique=False,
                          nullable=False)
 
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
+
+    requests = db.relationship("Request", backref="user", lazy="dynamic")
+    offers = db.relationship("Offer", backref="user", lazy="dynamic")
 
     def set_password(self, password):
         """Create hashed password."""

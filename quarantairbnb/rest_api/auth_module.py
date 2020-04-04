@@ -1,9 +1,11 @@
 import logging
 
+from flask_jwt import jwt_required, current_identity
 from flask_restx import Resource, fields
 
 from flask import request, jsonify
 from marshmallow import ValidationError
+from werkzeug.utils import redirect
 
 from quarantairbnb.api import api_builder
 from quarantairbnb.models import User, Role, db
@@ -16,6 +18,11 @@ registration_model = ns.model("Registration", {
     "username": fields.String,
     "password": fields.String,
     "email": fields.String
+})
+
+login_model = ns.model("LoginPayload", {
+    "email": fields.String,
+    "password": fields.String,
 })
 
 
@@ -55,9 +62,10 @@ class RegistrationResourceHost(Resource):
 
 
 @ns.route(
-    "/login"
+    "/current"
 )
 class UserResource(Resource):
 
+    @jwt_required()
     def get(self):
-        return {"hello": "world"}, 200
+        return user_schema.dump(current_identity)

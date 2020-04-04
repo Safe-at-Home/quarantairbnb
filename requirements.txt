@@ -14,3 +14,4 @@ Flask-CORS
 Flask-Marshmallow
 marshmallow-sqlalchemy
 marshmallow
+cryptography
