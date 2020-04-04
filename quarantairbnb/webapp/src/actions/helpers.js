@@ -26,6 +26,14 @@ export const createActionName = (action, modifier) => {
   return stringBuilder.join("");
 };
 
+export const apiActionCreator = (type, data) => {
+  let action = { type }
+  if (data) {
+    action = {...action, payload: {...data}}
+  }
+  return action;
+}
+
 export const isModifiedBy = (modifier, name) => {
   return (
     name.indexOf(modifier.prefix) !== -1 && name.indexOf(modifier.suffix) !== -1
