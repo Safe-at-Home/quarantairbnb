@@ -1,2 +1,2 @@
-from .auth_module import RegistrationResourceHost, RegistrationResourceGuest, UserResource
-
+from .auth_module import *
+from .moderators_module import *
