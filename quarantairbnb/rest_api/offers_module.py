@@ -84,19 +84,6 @@ class OfferAction(Resource):
                                   .format(current_identity.id))
                 return offer_schema.dump(offer_entity)
 
-            elif operation == "delete":
-                if not self._delete_possible_for_role(offer_entity.state.name, current_role):
-                    raise ValueError("Current user does not have the permission to delete the offer with id {}"
-                                     .format(offer_id))
-
-                # Delete the offer
-                db.session.delete(offer_entity)
-                db.session.commit()
-
-                log_offer_history(offer_entity.id, 'The offer is deleted by the user with id {}'
-                                  .format(current_identity.id))
-                return offer_schema.dump(offer_entity)
-
             elif operation == "accept":
                 if not self._accept_possible_for_role(offer_entity.state.name, current_role):
                     raise ValueError("Current user does not have the permission to accept the offer with id {}"
@@ -128,15 +115,6 @@ class OfferAction(Resource):
 
         return state_name in role_name_to_cancellable_states[role_name]
 
-    @staticmethod
-    def _delete_possible_for_role(state_name: str, role_name: str) -> bool:
-        role_name_to_deletable_states = {
-            'host': ['initial'],
-            'admin': ['initial'],
-            'guest': []
-        }
-
-        return state_name in role_name_to_deletable_states[role_name]
 
     @staticmethod
     def _accept_possible_for_role(state_name: str, role_name: str) -> bool:

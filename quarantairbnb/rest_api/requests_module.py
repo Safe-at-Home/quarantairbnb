@@ -85,19 +85,6 @@ class RequestAction(Resource):
                                     .format(current_identity.id))
                 return request_schema.dump(request_entity)
 
-            elif operation == "delete":
-                if not self._delete_possible_for_role(request_entity.state.name, current_role):
-                    raise ValueError("Current user does not have the permission to delete the request with id {}"
-                                     .format(request_id))
-
-                # Delete the request
-                db.session.delete(request_entity)
-                db.session.commit()
-
-                log_request_history(request_entity.id, 'The request is deleted by the user with id {}'
-                                    .format(current_identity.id))
-                return request_schema.dump(request_entity)
-
             elif operation == "accept":
                 if not self._accept_possible_for_role(request_entity.state.name, current_role):
                     raise ValueError("Current user does not have the permission to accept the request with id {}"
@@ -128,16 +115,6 @@ class RequestAction(Resource):
         }
 
         return state_name in role_name_to_cancellable_states[role_name]
-
-    @staticmethod
-    def _delete_possible_for_role(state_name: str, role_name: str) -> bool:
-        role_name_to_deletable_states = {
-            'host': [],
-            'admin': ['initial'],
-            'guest': ['initial']
-        }
-
-        return state_name in role_name_to_deletable_states[role_name]
 
     @staticmethod
     def _accept_possible_for_role(state_name: str, role_name: str) -> bool:
