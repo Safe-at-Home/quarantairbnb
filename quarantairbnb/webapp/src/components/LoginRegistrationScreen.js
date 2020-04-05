@@ -8,11 +8,14 @@ import {
 } from "antd";
 import LoginForm from "./LoginForm";
 import RegistrationForm from "./RegistrationForm";
+import WhiteBar from "./WhiteBar";
 
 function LoginRegistrationScreen({isLogin, isHost}) {
+
   return (
     <Layout>
-      <Layout.Content style={{ height: "100vh" }}>
+      <WhiteBar/>
+      <Layout.Content style={{ height: "100vh",backgroundColor: "#fff" }}>
         <Row
           justify="center"
           style={{ height: "100vh" }}
