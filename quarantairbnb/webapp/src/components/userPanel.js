@@ -11,7 +11,6 @@ export const Sidebar = (props) => <Layout.Sider>{props.children}</Layout.Sider>;
 export const HostMenu = (props) => (
   <>
     <div style={{padding: "20px 0 0 20px"}}>
-      <h1 style={{ color: "#eee" }}>Safe at Home</h1>
     </div>
     <Menu theme="dark" mode="inline">
       <Menu.Item>
