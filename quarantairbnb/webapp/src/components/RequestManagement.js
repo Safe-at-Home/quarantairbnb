@@ -33,6 +33,7 @@ const RequestManagement = ({ requests, fetchRequests }) => {
           <ProgressBar
             stepNames={[
               "Request help",
+              "Wait for approval",
               "Wait for the moderator's approval",
               "Wait for a match",
               "Chat with your match",
@@ -56,21 +57,21 @@ const RequestManagement = ({ requests, fetchRequests }) => {
               />
             ) : (
               <>
-                {getCurrentStepIndex() === 1 ? (
+                {getCurrentStepIndex() === 1 || getCurrentStepIndex() === 2  ? (
                   <ReviewRequest
                     fetchRequests={fetchRequests}
                     setLoading={setLoading}
                   />
                 ) : (
                   <>
-                    {getCurrentStepIndex() === 2 ? (
+                    {getCurrentStepIndex() === 3 ? (
                       <WaitForOffer
                         fetchRequests={fetchRequests}
                         setLoading={setLoading}
                       />
                     ) : (
                       <>
-                        {getCurrentStepIndex() === 3 ? (
+                        {getCurrentStepIndex() === 4 ? (
                           <MatchedOffer
                             fetchRequests={fetchRequests}
                             setLoading={setLoading}

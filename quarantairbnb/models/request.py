@@ -9,6 +9,8 @@ class Request(db.Model):
 
     state_id = db.Column(db.Integer, db.ForeignKey('states.id'), nullable=False)
     offer_id = db.Column(db.Integer, db.ForeignKey('offers.id'), nullable=True)  # matched offer
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
 
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
