@@ -28,7 +28,7 @@ function HostPanel({ authorized, role, offers }) {
                   onClick={(value) => setScreen(value.key)}
                   selectedKeys={[screen]}
                 >
-                  <Menu.Item key="request">Your Request</Menu.Item>
+                  <Menu.Item key="request">Your Offers</Menu.Item>
                   <Menu.Item key="messages">My messages</Menu.Item>
                   <Menu.Item key="mod-messages">Contact moderator</Menu.Item>
                 </Menu>
