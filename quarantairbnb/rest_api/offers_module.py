@@ -6,7 +6,7 @@ from flask_restx import Resource
 from flask import request
 
 from quarantairbnb.api import api_builder
-from quarantairbnb.models import Offer, db, State
+from quarantairbnb.models import Offer, db, State, CancelledMatch, Request
 from quarantairbnb.rest_api import get_request_data
 from quarantairbnb.rest_api.utils import log_offer_history
 from quarantairbnb.schemas import offer_schema, offers_schema, offer_history_schema
@@ -92,8 +92,26 @@ class OfferAction(Resource):
                 # Update the state of the offer
                 initial_state_name = offer_entity.state.name
                 offer_entity.state_id = offer_entity.state.cancel_id
-                db.session.add(offer_entity)
-                db.session.commit()
+
+                if initial_state_name == 'matched':
+                    matched_request_id = offer_entity.request_id
+                    # Clear the matched request_id and offer_id and add entry to cancelled matches
+                    cancelled_match = CancelledMatch(
+                        request_id=matched_request_id,
+                        offer_id=offer_id
+                    )
+
+                    offer_entity.request_id = None
+
+                    matched_request = Request.query.get(matched_request_id)  # type: Request
+                    matched_request.offer_id = None
+
+                    db.session.add_all([offer_entity, matched_request, cancelled_match])
+                    db.session.commit()
+
+                else:
+                    db.session.add(offer_entity)
+                    db.session.commit()
 
                 log_offer_history(offer_entity.id, 'The offer changed state from {} to {}'
                                   .format(initial_state_name, offer_entity.state.name))
