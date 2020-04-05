@@ -13,7 +13,7 @@ const initialState = {
   authorized: false,
   wrongCredentials: false,
   errorRegistering: false,
-  justRegistered: false
+  justRegistered: false,
 };
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -38,6 +38,8 @@ const reducer = (state = initialState, action) => {
     case errorAction(createActionName(at.HOST, m.POST_REGISTER)):
     case errorAction(createActionName(at.GUEST, m.POST_REGISTER)):
       return { ...state, errorRegistering: true, justRegistered: false };
+    case "LOG_OUT":
+      return { ...initialState };
     default:
       return state;
   }

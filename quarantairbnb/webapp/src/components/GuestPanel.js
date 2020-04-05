@@ -3,6 +3,8 @@ import Messages, {ModeratorMessages} from "./messages";
 import {Redirect} from "react-router";
 import React, {useState} from "react";
 import {connect} from "react-redux";
+import { apiActionCreator } from "../actions/helpers";
+
 
 import RequestManagement from "./RequestManagement";
 import {Container, Image, Segment} from "semantic-ui-react";
@@ -54,11 +56,11 @@ function GuestPanel({authorized, role}) {
   );
 }
 
-const UserPanelHeader = () => {
+const header = ({logOut}) => {
   const fixed = false;
 
   return (
-    <Segment style={{padding: 5, backgroundColor: "#fff"}} vertical basic>
+    <Segment inverted style={{padding: 5, backgroundColor: "#efefef"}} vertical basic>
       <Menu
         fixed={fixed ? "top" : null}
         pointing={!fixed}
@@ -68,15 +70,13 @@ const UserPanelHeader = () => {
         <Container>
           <Row align="middle" style={{padding: 5, paddingTop: 10}}>
             <Col span={1}>
-              <Image src="logo.png" size="mini" centered/>
+              <Image src="logo.png" size="mini" centered circular/>
             </Col>
             <Col span={22}>
               <h3>Safe at Home</h3>
             </Col>
             <Col span={1}>
-              <Link to={"/"}>
-                <Button>Log out</Button>
-              </Link>
+                <Button onClick={logOut}>Log out</Button>
             </Col>
           </Row>
         </Container>
@@ -89,5 +89,10 @@ const mapStateToProps = (state) => ({
   authorized: state.auth.authorized,
   role: state.auth.role,
 });
+
+const logOut = () => async dispatch => {
+  return dispatch(apiActionCreator("LOG_OUT"))
+}
+const UserPanelHeader = connect(() => ({}), {logOut})(header)
 
 export default connect(mapStateToProps)(GuestPanel);
