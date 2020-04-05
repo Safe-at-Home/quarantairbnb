@@ -4,6 +4,7 @@ from datetime import timedelta
 
 class Config:
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    CELERY_BROKER_URL = os.environ['CELERY_URL'] if 'CELERY_URL' in os.environ else None
     JWT_AUTH_URL_RULE = '/api/auth/login'
     JWT_SECRET_KEY = 'test123'
     JWT_AUTH_USERNAME_KEY = 'email'
