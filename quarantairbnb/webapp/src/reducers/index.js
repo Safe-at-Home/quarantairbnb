@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux'
-import test from './test'
 import auth from './auth'
+import requests from './requests'
+import offers from './offers'
 
 export default combineReducers({
-    test,
-    auth
-    // to be added
+    auth,
+    requests,
+    offers
 })

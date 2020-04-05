@@ -66,4 +66,17 @@ export default class ApiService {
       false
     );
   };
+
+  getAll = async (url) => {
+    console.log("getAll", url)
+    return this.sendRequest(`${this.serverUrl}/${url}`)
+  }
+
+  postFromBody = async (url, body) => {
+    return this.sendRequest(`${this.serverUrl}/${url}`, "POST", body)
+  }
+
+  postOperation = async (url, operation, id) => {
+    return this.sendRequest(`${this.serverUrl}/${url}/${operation}/${id}`)
+  }
 }
