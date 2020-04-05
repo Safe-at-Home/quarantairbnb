@@ -39,6 +39,7 @@ const OfferManagement = ({ isNew, offerId, offers, fetchOffers }) => {
               "Wait for the moderator's approval",
               "Wait for a match",
               "Chat with your match",
+              "Done",
               "All done!",
             ]}
             currentStepIndex={getCurrentStepIndex()}
@@ -60,21 +61,21 @@ const OfferManagement = ({ isNew, offerId, offers, fetchOffers }) => {
                 from here on these components should be 
                 replaced, they're just copied from the guest
                 */
-               getCurrentStepIndex() === 1 ? (
+               getCurrentStepIndex() === 1 || getCurrentStepIndex() === 2 ? (
                   <ReviewRequest
                     fetchOffers={fetchOffers}
                     setLoading={setLoading}
                   />
                 ) : (
                   <>
-                    {getCurrentStepIndex() === 2 ? (
+                    {getCurrentStepIndex() === 3 ? (
                       <WaitForOffer
                         fetchOffers={fetchOffers}
                         setLoading={setLoading}
                       />
                     ) : (
                       <>
-                        {getCurrentStepIndex() === 3 ? (
+                        {getCurrentStepIndex() === 4 ? (
                           <MatchedOffer
                             fetchOffers={fetchOffers}
                             setLoading={setLoading}

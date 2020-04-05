@@ -3,78 +3,25 @@ import { Alert, Input, Form, DatePicker, Button, InputNumber } from "antd";
 import { postFromBody } from "../actions";
 import * as at from "../actions/types";
 import { connect } from "react-redux";
-import { Map, Marker, Popup, TileLayer } from "react-leaflet";
+import MapComp from "./MapComp";
 import { Segment, Header, Divider } from "semantic-ui-react";
 
-const MapThing = ({ lat, long }) => {
-  const [activePark, setActivePark] = React.useState(null);
-
-  if (isNaN(lat) || isNaN(long)) {
-    return (
-      <Segment>
-        <Header>Cannot render map</Header>
-      </Segment>
-    );
-  }
-
-  return (
-    <Map style={{ height: "350px" }} center={[lat, long, 17]} zoom={12}>
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <Marker
-        key={"center"}
-        position={[lat, long]}
-        // onClick={() => {
-        //   setActivePark(park);
-        // }}
-        // icon={icon}
-      />
-      {/* 
-      {parkData.features.map(park => (
-        <Marker
-          key={park.properties.PARK_ID}
-          position={[
-            park.geometry.coordinates[1],
-            park.geometry.coordinates[0]
-          ]}
-          onClick={() => {
-            setActivePark(park);
-          }}
-          icon={icon}
-        />
-      ))}
-
-      {activePark && (
-        <Popup
-          position={[
-            activePark.geometry.coordinates[1],
-            activePark.geometry.coordinates[0]
-          ]}
-          onClose={() => {
-            setActivePark(null);
-          }}
-        >
-          <div>
-            <h2>{activePark.properties.NAME}</h2>
-            <p>{activePark.properties.DESCRIPTIO}</p>
-          </div>
-        </Popup>
-      )} */}
-    </Map>
-  );
-};
 
 const CreateRequest = ({ postRequest, fetchRequests, setLoading }) => {
   const [lat, setLat] = useState(52.231838);
   const [long, setLong] = useState(21.0038063);
+  const updateParent = (mapLat, mapLong) => {
+    setLat(mapLat);
+    setLong(mapLong);
+  }
   const onFinish = async (values) => {
     console.log(values);
     // we should build a body here and submit
     setLoading(true);
     const body = {
       description: values.description,
+      start_date: values["range-picker"][0],
+      end_date: values["range-picker"][1],
       latitude: lat,
       longitude: long,
     };
@@ -100,7 +47,7 @@ const CreateRequest = ({ postRequest, fetchRequests, setLoading }) => {
       />
       <h1>Create a request</h1>
       <Divider />
-      <MapThing lat={lat} long={long} />
+      <MapComp lat={lat} long={long} updateParent={updateParent} />
       <Divider />
       <Segment basic>
         <p>Latitude</p>

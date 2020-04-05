@@ -12,6 +12,9 @@ class Offer(db.Model):
 
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
+    description = db.Column(db.String(800))
 
     area = db.Column(db.Float)  # area in square meter
     number_of_rooms = db.Column(db.Integer)

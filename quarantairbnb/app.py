@@ -2,8 +2,6 @@ import copy
 import os
 from typing import Dict
 
-import click
-from celery import Celery
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -19,33 +17,6 @@ def configure_api(api_instance: Api):
     api_instance.prefix = '/api/v1'
 
 
-def init_celery(flask_app):
-    if 'CELERY_BROKER_URL' in flask_app.config and flask_app.config['CELERY_BROKER_URL']:
-        celery = Celery(flask_app.name, broker=flask_app.config['CELERY_BROKER_URL'])
-        # celery.conf.result_backend = flask_app.config['CELERY_RESULT_BACKEND']
-        celery.conf.update(flask_app.config)
-
-        class ContextTask(celery.Task):
-            """Make celery tasks work with Flask flask_app context"""
-
-            def __call__(self, *args, **kwargs):
-                with flask_app.app_context():
-                    return self.run(*args, **kwargs)
-
-        celery.Task = ContextTask
-
-        @celery.task
-        def match_offers():
-            print("TODO: implement")
-
-        @celery.on_after_configure.connect
-        def setup_tasks(sender, **kwargs):
-            sender.add_periodic_task(30.0, match_offers.s('hello'), name='match offers every 30 seconds')
-
-        return celery
-    return None
-
-
 def create_app():
     flask_app = Flask(__name__, static_folder='webapp/build')
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -58,13 +29,13 @@ def create_app():
     ma.init_app(flask_app)
     api_builder.init_app(flask_app)
     jwt_handler.init_app(flask_app)
-    celery = init_celery(flask_app)
     Migrate(flask_app, db)
 
-    return flask_app, celery
+    return flask_app
 
 
-app, celery = create_app()
+app = create_app()
+
 
 seed_cli = AppGroup('seed')
 

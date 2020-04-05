@@ -35,6 +35,7 @@ function HostPanel({authorized, role, offers}) {
                   <Layout>
                     {screen === "request" ? (
                       <OffersList/>
+
                     ) : (
                       <>
                         {screen === "messages" ? (
