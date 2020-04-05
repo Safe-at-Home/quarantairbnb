@@ -1,28 +1,14 @@
 import React from "react";
-import {
-  SectionsContainer,
-  Section,
-  ScrollToTopOnMount
-} from "react-fullpage";
+import { SectionsContainer, Section, ScrollToTopOnMount } from "react-fullpage";
 import { Row, Col, Button } from "antd";
 
 function StartingScreen() {
   return (
     <>
       <ScrollToTopOnMount />
-      <SectionsContainer
-        anchors={["welcome", "guest", "host"]}
-        verticalAlign={true}
-        sectionPaddingTop="64px"
-      >
+      <SectionsContainer verticalAlign={true} sectionPaddingTop="64px">
         <Section>
           <WelcomeScreen />
-        </Section>
-        <Section>
-          <GuestScreen />
-        </Section>
-        <Section>
-          <HostScreen />
         </Section>
       </SectionsContainer>
     </>
@@ -30,7 +16,14 @@ function StartingScreen() {
 }
 
 const WelcomeScreen = () => (
-  <div style={{ background: "#fff", padding: 24, minHeight: 280 }}>
+  <div
+    style={{
+      background: "#001529",
+      padding: 24,
+      minHeight: 280,
+      height: "80vh",
+    }}
+  >
     <Row>
       <Col span={12}>
         <h1>Quarantine is hard for everyone</h1>

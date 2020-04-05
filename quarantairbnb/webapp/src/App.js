@@ -1,10 +1,11 @@
 import React from "react";
-import "./App.css";
 import LandingPage from "./components/LandingPage";
 import {Route, withRouter} from "react-router";
 import LoginRegistrationScreen from "./components/LoginRegistrationScreen";
 import GuestPanel from "./components/GuestPanel";
 import HostPanel from "./components/HostPanel";
+import StartHostPage from "./components/StartHostPage";
+import StartGuestPage from "./components/StartGuestPage";
 
 // we should add routing here based on token/router I guess
 function App() {
@@ -16,6 +17,8 @@ function App() {
       <Route path="/registerGuest" render={(props) => <LoginRegistrationScreen {...props} isLogin={false} isHost={false}/>}/>
       <Route path="/guest" component={GuestPanel}/>
       <Route path="/host" component={HostPanel}/> 
+      <Route path="/startHost" component={StartHostPage}/> 
+      <Route path="/startGuest" component={StartGuestPage}/> 
     </>
   );
 }
