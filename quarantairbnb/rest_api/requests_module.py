@@ -45,7 +45,7 @@ class RequestToPost(Resource):
 
     @staticmethod
     def _create_request(request_data):
-        state_id = State.query.filter_by(name="initial").one().id
+        state_id = State.query.filter_by(name="in_approval").one().id
         request_data['state_id'] = state_id
         new_request = Request(**request_schema.load(request_data))
         new_request.user_id = current_identity.id
