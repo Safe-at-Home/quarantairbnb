@@ -6,6 +6,7 @@ import GuestPanel from "./components/GuestPanel";
 import HostPanel from "./components/HostPanel";
 import StartHostPage from "./components/StartHostPage";
 import StartGuestPage from "./components/StartGuestPage";
+import AdminPanel from "./components/AdminPanel";
 
 // we should add routing here based on token/router I guess
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Route path="/host" component={HostPanel}/> 
       <Route path="/startHost" component={StartHostPage}/> 
       <Route path="/startGuest" component={StartGuestPage}/> 
+      <Route path="/admin" component={AdminPanel}/> 
     </>
   );
 }
