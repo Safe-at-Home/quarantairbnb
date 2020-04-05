@@ -21,3 +21,23 @@ export const USER = {
     root: "USER",
     modifiers: [m.GET_ALL, m.POST_LOGIN]
 }
+
+export const REQUESTS = {
+    root: "REQUESTS",
+    modifiers: [m.GET_ALL, m.POST_FROM_BODY, m.POST_OPERATION_BY_ID]
+}
+
+export const OFFERS = {
+    root: "OFFERS",
+    modifiers: [m.GET_ALL, m.POST_FROM_BODY, m.POST_OPERATION_BY_ID]
+}
+
+export const MOD_REQUESTS = {
+    root: "MOD_REQUESTS",
+    modifiers: [m.GET_ALL]
+}
+
+export const MOD_OFFERS = {
+    root: "MOD_OFFERS",
+    modifiers: [m.GET_ALL]
+}

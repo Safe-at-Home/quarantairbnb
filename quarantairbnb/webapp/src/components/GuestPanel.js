@@ -1,32 +1,56 @@
-import {Layout} from "antd";
-import Offers from "./offers";
-import Messages, {ModeratorMessages} from "./messages";
-import Settings from "./settings";
-import {GuestMenu, ProgressBar, Sidebar} from "./userPanel";
-import {withRouter} from "react-router";
-import React from "react";
-import {Route} from "react-router-dom";
+import { Layout, Menu } from "antd";
+import Messages, { ModeratorMessages } from "./messages";
+import { Redirect } from "react-router";
+import React, { useState } from "react";
+import { connect } from "react-redux";
 
-function GuestPanel() {
+import RequestManagement from "./RequestManagement";
+
+function GuestPanel({ authorized, role }) {
+  const [screen, setScreen] = useState("request");
   return (
-    <div>
-      <Layout className="full-page-layout">
-        <Sidebar>
-          <GuestMenu/>
-        </Sidebar>
-        <Layout>
-          <ProgressBar
-            stepNames={['Request help', 'Wait for the moderator\'s approval', 'Wait for a match', 'Chat with your match', 'All done!']}
-            currentStepIndex={1}/>
-          <Route path="/guest/offers" component={Offers}/>
-          <Route path="/guest/messages" component={Messages}/>
-          <Route path="/guest/settings" component={Settings}/>
-          <Route path="/guest/moderatormessages" component={ModeratorMessages}/>
-        </Layout>
-      </Layout>
-    </div>
-
-  )
+    <>
+      {authorized ? (
+        <>
+          {role === "guest" ? (
+            <Layout style={{ minHeight: "100vh" }}>
+              <Layout.Sider>
+                <div style={{ padding: "20px 0 0 20px" }}>
+                  <h1 style={{ color: "#eee" }}>Safe at Home</h1>
+                </div>
+                <Menu
+                  theme="dark"
+                  mode="inline"
+                  onClick={(value) => setScreen(value.key)}
+                  selectedKeys={[screen]}
+                >
+                  <Menu.Item key="request">Your Request</Menu.Item>
+                  <Menu.Item key="messages">My messages</Menu.Item>
+                  <Menu.Item key="mod-messages">Contact moderator</Menu.Item>
+                </Menu>
+              </Layout.Sider>
+              {screen === "request" ? (
+                <RequestManagement />
+              ) : (
+                <>
+                  {screen === "messages" ? <Messages /> : <ModeratorMessages />}
+                </>
+              )}
+            </Layout>
+          ) : (
+            <Redirect to={{ pathname: `/${role}` }} />
+          )}
+        </>
+      ) : (
+        <Redirect to={{ pathname: "/login" }} />
+      )}
+    </>
+  );
 }
 
-export default withRouter(GuestPanel);
+const mapStateToProps = (state) => ({
+  authorized: state.auth.authorized,
+  role: state.auth.role,
+});
+
+export default connect(mapStateToProps)(GuestPanel);
