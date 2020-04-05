@@ -33,15 +33,31 @@ const ModeratorOffers = ({ fetchRequests }) => {
       key: "description",
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: "State",
+      dataIndex: "state",
+      key: "state",
+      render: (s) => s.name,
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: "Latitude",
+      dataIndex: "latitude",
+      key: "latitude",
     },
+    {
+      title: "Longitude",
+      dataIndex: "longitude",
+      key: "longitude",
+    },
+    {
+      title: "Start Date",
+      dataIndex: "start_date",
+      key: "start_date",
+    },
+    {
+      title: "End Date",
+      dataIndex: "end_date",
+      key: "end_date",
+    }
   ];
 
   return (

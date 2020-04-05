@@ -4,10 +4,10 @@ import * as at from "../actions/types";
 import { connect } from "react-redux";
 import { postOperation } from "../actions";
 
-const ReviewRequest = ({ postOperationRequest, fetchRequests, setLoading, requestId }) => {
+const ReviewRequest = ({ postOperationRequest, fetchRequests, setLoading, request }) => {
   const deleteRequest = async () => {
     setLoading(true);
-    await postOperationRequest("delete", requestId);
+    await postOperationRequest("delete", request.id);
     await fetchRequests();
     setLoading(false);
   };
@@ -23,13 +23,13 @@ const ReviewRequest = ({ postOperationRequest, fetchRequests, setLoading, reques
       />
       <h1>Review your request</h1>
       <Button onClick={deleteRequest}>Delete</Button>
-      
+
     </>
   );
 };
 
 const mapStateToProps = state => ({
-    requestId: state.requests.id
+  request: state.requests
 })
 const postOperationRequest = (operation, id) => async (dispatch) => {
   await dispatch(postOperation(at.REQUESTS, operation, id));

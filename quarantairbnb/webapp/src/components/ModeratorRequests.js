@@ -5,12 +5,13 @@ import ReviewRequest from "./ReviewRequest";
 import WaitForOffer from "./WaitForOffer";
 import { connect } from "react-redux";
 import { ProgressBar } from "./userPanel";
-import { getAll } from "../actions";
+import { getAll, postOperation } from "../actions";
 import * as at from "../actions/types";
 import MatchedOffer from "./MatchedOffer";
 import ConfirmedOffer from "./ConfirmedOffer";
-import { Segment, Container } from "semantic-ui-react";
-const ModeratorRequests = ({ fetchRequests }) => {
+import { Segment, Container, Button } from "semantic-ui-react";
+
+const ModeratorRequests = ({ fetchRequests, postOperationRequest }) => {
   const [loading, setLoading] = useState(true);
   const [requests, setRequests] = useState([]);
   const getData = async () => {
@@ -25,6 +26,18 @@ const ModeratorRequests = ({ fetchRequests }) => {
   }, [setRequests]);
 
   console.log(requests);
+
+  const accept = async (row) => {
+    console.log(row);
+    await postOperationRequest("accept", row.id);
+    await getData();
+  }
+
+  const reject = async (row) => {
+    console.log('rejecting', row);
+    await postOperationRequest("cancel", row.id);
+    await getData();
+  }
 
   const columns = [
     {
@@ -48,6 +61,31 @@ const ModeratorRequests = ({ fetchRequests }) => {
       dataIndex: "longitude",
       key: "longitude",
     },
+    {
+      title: "Start Date",
+      dataIndex: "start_date",
+      key: "start_date",
+    },
+    {
+      title: "End Date",
+      dataIndex: "end_date",
+      key: "end_date",
+    },
+    {
+      title: "Actions",
+      dataIndex: "id",
+      key: "actions",
+      render: (d, row) => (
+        <>
+          <Button onClick={() => accept(row)} primary>
+            Accept
+          </Button>
+          <Button onClick={() => reject(row)}>
+            Reject
+          </Button>
+        </>
+      )
+    }
   ];
 
   return (
@@ -60,7 +98,7 @@ const ModeratorRequests = ({ fetchRequests }) => {
                 className="site-layout-content"
                 style={{
                   margin: "50px",
-                  padding: "30px",
+                  padding: "5px",
                   minHeight: "75vh",
                   backgroundColor: "#fff",
                 }}
@@ -77,9 +115,14 @@ const ModeratorRequests = ({ fetchRequests }) => {
 
 const mapStateToProps = (state) => ({
   //   requests: state.requests,
+  token: state.auth.token
 });
 
 const fetchRequests = () => async (dispatch) =>
   await dispatch(getAll(at.MOD_REQUESTS));
 
-export default connect(mapStateToProps, { fetchRequests })(ModeratorRequests);
+
+const postOperationRequest = (operation, id) => async (dispatch) =>
+    await dispatch(postOperation(at.REQUESTS, operation, id));
+  
+export default connect(mapStateToProps, { fetchRequests, postOperationRequest })(ModeratorRequests);

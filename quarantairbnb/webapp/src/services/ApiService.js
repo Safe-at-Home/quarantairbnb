@@ -77,6 +77,6 @@ export default class ApiService {
   }
 
   postOperation = async (url, operation, id) => {
-    return this.sendRequest(`${this.serverUrl}/${url}/${operation}/${id}`)
+    return this.sendRequest(`${this.serverUrl}/${url}/${operation}/${id}`, "POST")
   }
 }
