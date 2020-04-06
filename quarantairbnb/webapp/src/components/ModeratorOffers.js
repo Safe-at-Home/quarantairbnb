@@ -5,10 +5,11 @@ import ReviewRequest from "./ReviewRequest";
 import WaitForOffer from "./WaitForOffer";
 import { connect } from "react-redux";
 import { ProgressBar } from "./userPanel";
-import { getAll } from "../actions";
+import { getAll, postOperation } from "../actions";
 import * as at from "../actions/types";
 import MatchedOffer from "./MatchedOffer";
 import ConfirmedOffer from "./ConfirmedOffer";
+import { Button } from "semantic-ui-react";
 
 const ModeratorOffers = ({ fetchRequests }) => {
   const [loading, setLoading] = useState(true);
@@ -23,6 +24,20 @@ const ModeratorOffers = ({ fetchRequests }) => {
   useEffect(() => {
     getData();
   }, [setRequests]);
+
+
+  const accept = async (row) => {
+    console.log(row);
+    await postOperationRequest("accept", row.id);
+    await getData();
+  }
+
+  const reject = async (row) => {
+    console.log('rejecting', row);
+    await postOperationRequest("cancel", row.id);
+    await getData();
+  }
+
 
   console.log(requests);
 
@@ -57,6 +72,21 @@ const ModeratorOffers = ({ fetchRequests }) => {
       title: "End Date",
       dataIndex: "end_date",
       key: "end_date",
+    },
+    {
+      title: "Actions",
+      dataIndex: "id",
+      key: "actions",
+      render: (d, row) => (
+        <>
+          <Button onClick={() => accept(row)} primary>
+            Accept
+          </Button>
+          <Button onClick={() => reject(row)}>
+            Reject
+          </Button>
+        </>
+      )
     }
   ];
 
@@ -88,4 +118,7 @@ const mapStateToProps = (state) => ({
 const fetchRequests = () => async (dispatch) =>
   await dispatch(getAll(at.MOD_OFFERS));
 
-export default connect(mapStateToProps, { fetchRequests })(ModeratorOffers);
+const postOperationRequest = (operation, id) => async (dispatch) =>
+  await dispatch(postOperation(at.OFFERS, operation, id));
+
+export default connect(mapStateToProps, { fetchRequests, postOperationRequest })(ModeratorOffers);
