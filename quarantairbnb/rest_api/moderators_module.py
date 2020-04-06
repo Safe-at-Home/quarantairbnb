@@ -26,5 +26,5 @@ class OffersToApprove(Resource):
 
     @jwt_required()
     def get(self):
-        offers_to_approve = Offer.query.filter(Request.state.has(name='in_approval')).all()
+        offers_to_approve = Offer.query.filter(Offer.state.has(name='in_approval')).all()
         return offers_schema.dump(offers_to_approve)

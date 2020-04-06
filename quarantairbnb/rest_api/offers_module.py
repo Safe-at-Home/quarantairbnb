@@ -44,7 +44,7 @@ class OfferToPost(Resource):
 
     @staticmethod
     def _create_offer(offer_data):
-        state_id = State.query.filter_by(name="initial").one().id
+        state_id = State.query.filter_by(name="in_approval").one().id
         offer_data['state_id'] = state_id
         new_offer = Offer(**offer_schema.load(offer_data))
         new_offer.user_id = current_identity.id

@@ -5,6 +5,7 @@ from quarantairbnb.models import Request, Offer, db, CancelledMatch
 
 
 def init_celery(flask_app):
+    celery = Celery(flask_app.name)
     if 'CELERY_BROKER_URL' in flask_app.config and flask_app.config['CELERY_BROKER_URL']:
         celery = Celery(flask_app.name, broker=flask_app.config['CELERY_BROKER_URL'])
         # celery.conf.result_backend = flask_app.config['CELERY_RESULT_BACKEND']
@@ -19,8 +20,7 @@ def init_celery(flask_app):
                     return TaskBase.__call__(self, *args, **kwargs)
 
         celery.Task = ContextTask
-        return celery
-    return None
+    return celery
 
 
 celery = init_celery(app)
@@ -64,7 +64,11 @@ def match_offers():
                 squared_distance(pending_request, pending_offer): pending_offer for pending_offer in pending_offers
             }
 
-            minimum_distance = min(list(distance_to_offer.keys()))
+            distances_to_offer_list = list(distance_to_offer.keys())
+            if not distances_to_offer_list:
+                print("Can't find offers...")
+                return
+            minimum_distance = min(distances_to_offer_list)
             matched_offer = distance_to_offer[minimum_distance]  # type: Offer
 
             # Matching offer to request
