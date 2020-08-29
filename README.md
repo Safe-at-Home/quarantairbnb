@@ -1,4 +1,9 @@
-# Quarantairbnb
+# Safe at Home
+
+<img src="./img/logo-govtech.png" alt="Govtech"
+	title="Govtech Polska" width="394" height="167" />
+
+## Running
 
 To run the app production-style:
 
@@ -16,8 +21,8 @@ With creds:
 
 ```json
 {
-	"email": "admin@op.pl",
-	"password": "1234"
+  "email": "admin@op.pl",
+  "password": "1234"
 }
 ```
 
@@ -47,13 +52,13 @@ Running:
 flask run
 ```
 
-
 ## Migrating
 
-After setting everything up and using the right DB, use the manage script for 
+After setting everything up and using the right DB, use the manage script for
 everything to be setup in the DB.
 
 ### New model / changes
+
 When you want to update your model, adding a new migration:
 
 ```
